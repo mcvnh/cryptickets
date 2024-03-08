@@ -1,34 +1,37 @@
 import { Token } from '../../types/token';
 import { Formatter } from '../../types/formatter';
-import { formatString, formatBoolean, formatCurrency, formatPercent, formatPercentWoEmoji } from '../../formatter';
+import { formatString, formatBoolean, formatCurrency, formatPercent, formatPercentWoEmoji, formatNumber } from '../../formatter';
 import { markdownTable } from 'markdown-table';
 import { Env } from '../../types/env';
 import qs from 'qs';
 import CMC from '../../services/cmc';
 import SLACK from '../../services/slack';
 
-const tokenArrayToMarkdownTable = (data: Token[]) => {
-  const keys = ["rank", "symbol", "percentChange24h", "percentVolumeChange24h", "infiniteSupply", "fdv", "tvl", "price"];
-  const columnFormat: { [key: string]: Formatter } = {
-    "rank": formatString,
-    "symbol": formatString,
-    "percentChange24h": formatPercent,
-    "percentVolumeChange24h": formatPercentWoEmoji,
-    "infiniteSupply": formatBoolean,
-    "fdv": formatCurrency,
-    "tvl": formatCurrency,
-    "price": formatCurrency,
-  }
-
-  const format = (column: string, value: any) => {
-    return columnFormat[column].format(value);
-  }
-
-  const readableColumnNames = ["Rank", "Symbol", "24h (%)", "Vol 24h (%)", "∞ supply", "FDV", "TVL", "Price"];
-  const columns = [readableColumnNames, ...data.map((token: any): any => keys.map((column): any => format(column, token[column])))]
-
-  return markdownTable(columns);
+interface Column {
+  key: string;
+  label: string;
+  formatter: Formatter;
 }
+
+const exportColumns: Column[] = [
+  { key: "rank", label: "Rank", formatter: formatNumber },
+  { key: "symbol", label: "Rank", formatter: formatString },
+  { key: "percentChange24h", label: "Rank", formatter: formatPercent },
+  { key: "percentVolumeChange24h", label: "Rank", formatter: formatPercentWoEmoji },
+  { key: "infiniteSupply", label: "Rank", formatter: formatBoolean },
+  { key: "fdv", label: "Rank", formatter: formatCurrency },
+  { key: "tvl", label: "Rank", formatter: formatCurrency },
+  { key: "price", label: "Rank", formatter: formatCurrency },
+]
+
+const TokensTable = (tokens: Token[]) => ({ 
+  render: (columns: Column[]) => {
+    const columnNames = columns.map((col: Column) => col.label);
+    const tableData = tokens.map((token: any): any => columns.map((col: Column) => col.formatter.format(token[col.key])))
+
+    return markdownTable([columnNames, ...tableData]);
+  }
+});
 
 export default async (request: Request, env: Env) => {
   const body = await request.text();
@@ -36,8 +39,8 @@ export default async (request: Request, env: Env) => {
   const channel = (params['channel_id'] as string).trim();
   const symbols = (params['text'] as string).trim().replaceAll(" ", ",");
 
-  const results = await CMC.fetchSymbols(env, symbols);
-  const status = await SLACK.sendMessage(env, channel, '```\n' + tokenArrayToMarkdownTable(results) + '```\n');
+  const tokens = await CMC.fetchSymbols(env, symbols);
+  const status = await SLACK.sendMessage(env, channel, '```\n' + TokensTable(tokens).render(exportColumns) + '```\n');
 
   if (!status) {
     return new Response("Error, something went wrong, please check!");
