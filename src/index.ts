@@ -12,12 +12,12 @@ router.get("*", NotFound);
 
 
 export default {
-	async fetch(
-		request: Request,
-		env: Env,
-		ctx: ExecutionContext
-	): Promise<any> {
+  async fetch(
+    request: Request,
+    env: Env,
+    ctx: ExecutionContext
+  ): Promise<any> {
 
-		return router.handle(request, env, ctx);
-	}
+    return router.handle(request, env, ctx);
+  }
 };
