@@ -3,7 +3,7 @@ import { Env } from './types/env';
 import { Router } from 'itty-router';
 import Hello from './routes/hello';
 import NotFound from './routes/404';
-import SlackPrices from './routes/slack/Prices';
+import SlackPrices from './routes/slack/prices';
 
 const router = Router();
 router.post("/slack/prices", SlackPrices);
