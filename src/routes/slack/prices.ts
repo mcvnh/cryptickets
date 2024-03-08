@@ -27,8 +27,7 @@ const exportColumns: Column[] = [
 const TokensTable = (tokens: Token[]) => ({ 
   render: (columns: Column[]) => {
     const columnNames = columns.map((col: Column) => col.label);
-    // const tableData = tokens.map((token: any): any => columns.map((col: Column) => col.formatter.format(token[col.key])))
-    const tableData: [] = [];
+    const tableData = tokens.map((token: any): any => columns.map((col: Column) => col.formatter.format(token[col.key])))
 
     return markdownTable([columnNames, ...tableData]);
   }
