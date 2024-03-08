@@ -15,19 +15,20 @@ interface Column {
 
 const exportColumns: Column[] = [
   { key: "rank", label: "Rank", formatter: formatNumber },
-  { key: "symbol", label: "Rank", formatter: formatString },
-  { key: "percentChange24h", label: "Rank", formatter: formatPercent },
-  { key: "percentVolumeChange24h", label: "Rank", formatter: formatPercentWoEmoji },
-  { key: "infiniteSupply", label: "Rank", formatter: formatBoolean },
-  { key: "fdv", label: "Rank", formatter: formatCurrency },
-  { key: "tvl", label: "Rank", formatter: formatCurrency },
-  { key: "price", label: "Rank", formatter: formatCurrency },
+  { key: "symbol", label: "Symbol", formatter: formatString },
+  { key: "percentChange24h", label: "24h (%)", formatter: formatPercent },
+  { key: "percentVolumeChange24h", label: "Vol 24h (%)", formatter: formatPercentWoEmoji },
+  { key: "infiniteSupply", label: "∞ supply", formatter: formatBoolean },
+  { key: "fdv", label: "FDV", formatter: formatCurrency },
+  { key: "tvl", label: "TVL", formatter: formatCurrency },
+  { key: "price", label: "Price", formatter: formatCurrency },
 ]
 
 const TokensTable = (tokens: Token[]) => ({ 
   render: (columns: Column[]) => {
     const columnNames = columns.map((col: Column) => col.label);
-    const tableData = tokens.map((token: any): any => columns.map((col: Column) => col.formatter.format(token[col.key])))
+    // const tableData = tokens.map((token: any): any => columns.map((col: Column) => col.formatter.format(token[col.key])))
+    const tableData: [] = [];
 
     return markdownTable([columnNames, ...tableData]);
   }
