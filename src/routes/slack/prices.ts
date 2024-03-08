@@ -8,26 +8,26 @@ import CMC from '../../services/cmc';
 import SLACK from '../../services/slack';
 
 const tokenArrayToMarkdownTable = (data: Token[]) => {
-	const keys = ["rank", "symbol", "percentChange24h", "percentVolumeChange24h", "infiniteSupply", "fdv", "tvl", "price"];
-	const columnFormat: { [key: string]: Formatter } = {
+  const keys = ["rank", "symbol", "percentChange24h", "percentVolumeChange24h", "infiniteSupply", "fdv", "tvl", "price"];
+  const columnFormat: { [key: string]: Formatter } = {
     "rank": formatString,
-		"symbol": formatString,
-		"percentChange24h": formatPercent,
+    "symbol": formatString,
+    "percentChange24h": formatPercent,
     "percentVolumeChange24h": formatPercentWoEmoji,
     "infiniteSupply": formatBoolean,
-		"fdv": formatCurrency,
-		"tvl": formatCurrency,
-		"price": formatCurrency,
-	}
+    "fdv": formatCurrency,
+    "tvl": formatCurrency,
+    "price": formatCurrency,
+  }
 
-	const format = (column: string, value: any) => {
-		return columnFormat[column].format(value);
-	}
+  const format = (column: string, value: any) => {
+    return columnFormat[column].format(value);
+  }
 
-	const readableColumnNames = ["Rank", "Symbol", "24h (%)", "Vol 24h (%)", "∞ supply", "FDV", "TVL", "Price"];
-	const columns = [readableColumnNames, ...data.map((token: any): any => keys.map((column): any => format(column, token[column])))]
+  const readableColumnNames = ["Rank", "Symbol", "24h (%)", "Vol 24h (%)", "∞ supply", "FDV", "TVL", "Price"];
+  const columns = [readableColumnNames, ...data.map((token: any): any => keys.map((column): any => format(column, token[column])))]
 
-	return markdownTable(columns);
+  return markdownTable(columns);
 }
 
 export default async (request: Request, env: Env) => {
