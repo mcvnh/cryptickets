@@ -2,7 +2,7 @@ import { Env } from './../types/env';
 export default {
   async sendMessage(env: Env, channel: string, text: string) {
     try {
-      const response = await fetch(`https://slack.com/api/chat.postMessage`, {
+      const response: any = await fetch(`https://slack.com/api/chat.postMessage`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${env.SLACK_XOXB_TOKEN}`,
@@ -12,12 +12,16 @@ export default {
           channel,
           text
         })
-      });
+      })
+      .then(response => response.json())
 
-      return response;
+      if (response.ok) {
+        return { status: 'success' }
+      }
+
+      return { status: 'failed', message: response.error }
     } catch (error) {
-      console.error(error);
-      return null;
+      return { status: 'failed', message: 'slack http error' }
     }
   }
 }

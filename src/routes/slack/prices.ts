@@ -1,6 +1,12 @@
 import { Token } from '../../types/token';
 import { Formatter } from '../../types/formatter';
-import { formatString, formatBoolean, formatCurrency, formatPercent, formatPercentWoEmoji, formatNumber, formatSupply } from '../../formatter';
+import {
+  CurrencyFormat,
+  NumberFormat,
+  PercentFormat,
+  StringFormat,
+  SupplyFormat
+} from '../../formatter';
 import { markdownTable } from 'markdown-table';
 import { Env } from '../../types/env';
 import qs from 'qs';
@@ -14,14 +20,14 @@ interface Column {
 }
 
 const exportColumns: Column[] = [
-  { key: "rank", label: "Rank", formatter: formatNumber },
-  { key: "symbol", label: "Symbol", formatter: formatString },
-  { key: "percentChange24h", label: "24h (%)", formatter: formatPercent },
-  { key: "percentVolumeChange24h", label: "Vol 24h (%)", formatter: formatPercentWoEmoji },
-  { key: "supply", label: "Supply", formatter: formatSupply },
-  { key: "fdv", label: "FDV", formatter: formatCurrency },
-  { key: "tvl", label: "TVL", formatter: formatCurrency },
-  { key: "price", label: "Price", formatter: formatCurrency },
+  { key: "rank", label: "Rank", formatter: NumberFormat },
+  { key: "symbol", label: "Symbol", formatter: StringFormat },
+  { key: "percentChange24h", label: "24h (%)", formatter: PercentFormat(true) },
+  { key: "percentVolumeChange24h", label: "Vol 24h (%)", formatter: PercentFormat(false) },
+  { key: "supply", label: "Supply", formatter: SupplyFormat },
+  { key: "fdv", label: "FDV", formatter: CurrencyFormat },
+  { key: "tvl", label: "TVL", formatter: CurrencyFormat },
+  { key: "price", label: "Price", formatter: CurrencyFormat },
 ]
 
 const TokensTable = (tokens: Token[]) => ({
@@ -43,10 +49,10 @@ export default async (request: Request, env: Env) => {
   const symbols = (params['text'] as string).trim().replaceAll(" ", ",");
 
   const tokens = await CMC.fetchSymbols(env, symbols);
-  const status = await SLACK.sendMessage(env, channel, '```\n' + TokensTable(tokens).render(exportColumns) + '```\n');
+  const slackResponse = await SLACK.sendMessage(env, channel, '```\n' + TokensTable(tokens).render(exportColumns) + '```\n');
 
-  if (!status) {
-    return new Response("Error, something went wrong, please check!");
+  if (slackResponse.status != 'success') {
+    return new Response(`[slack]: ${slackResponse.message}`);
   }
 
   return new Response();
