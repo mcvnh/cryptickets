@@ -48,11 +48,11 @@ export default async (request: Request, env: Env) => {
   const channel = (params['channel_id'] as string).trim();
   const symbols = (params['text'] as string).trim().replaceAll(" ", ",");
 
-  const tokens = await CMC.fetchSymbols(env, symbols);
-  const slackResponse = await SLACK.sendMessage(env, channel, '```\n' + TokensTable(tokens).render(exportColumns) + '```\n');
-
-  if (slackResponse.status != 'success') {
-    return new Response(`[slack]: ${slackResponse.message}`);
+  try {
+    const tokens = await CMC.fetchSymbols(env, symbols);
+    await SLACK.sendMessage(env, channel, '```\n' + TokensTable(tokens).render(exportColumns) + '```\n');
+  } catch (error: any) {
+    return new Response(error.message);
   }
 
   return new Response();

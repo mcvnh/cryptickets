@@ -32,7 +32,7 @@ describe("Slack service", () => {
       }
     )
 
-    expect(repsonse).toEqual({ status: 'success' });
+    expect(repsonse).toEqual(true);
   });
 
   it('can push a message to a slack channel but response was failed', async () => {
@@ -43,7 +43,8 @@ describe("Slack service", () => {
 
     fetch.mockResolvedValue(createFakeResponse(response));
 
-    const repsonse = await SLACK.sendMessage({SLACK_XOXB_TOKEN: '123456'}, 'test_channel', 'sample message')
+    const future = SLACK.sendMessage({SLACK_XOXB_TOKEN: '123456'}, 'test_channel', 'sample message');
+    await expect(async () => await future).rejects.toThrowError('too_many_attachments');
 
     expect(fetch).toHaveBeenCalledWith(
       'https://slack.com/api/chat.postMessage',
@@ -59,7 +60,5 @@ describe("Slack service", () => {
         })
       }
     )
-
-    expect(repsonse).toEqual({ status: 'failed', message: 'too_many_attachments' });
   });
 })
