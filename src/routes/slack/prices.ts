@@ -1,6 +1,6 @@
 import { Token } from '../../types/token';
 import { Formatter } from '../../types/formatter';
-import { formatString, formatBoolean, formatCurrency, formatPercent, formatPercentWoEmoji, formatNumber } from '../../formatter';
+import { formatString, formatBoolean, formatCurrency, formatPercent, formatPercentWoEmoji, formatNumber, formatSupply } from '../../formatter';
 import { markdownTable } from 'markdown-table';
 import { Env } from '../../types/env';
 import qs from 'qs';
@@ -18,16 +18,19 @@ const exportColumns: Column[] = [
   { key: "symbol", label: "Symbol", formatter: formatString },
   { key: "percentChange24h", label: "24h (%)", formatter: formatPercent },
   { key: "percentVolumeChange24h", label: "Vol 24h (%)", formatter: formatPercentWoEmoji },
-  { key: "infiniteSupply", label: "∞ supply", formatter: formatBoolean },
+  { key: "supply", label: "Supply", formatter: formatSupply },
   { key: "fdv", label: "FDV", formatter: formatCurrency },
   { key: "tvl", label: "TVL", formatter: formatCurrency },
   { key: "price", label: "Price", formatter: formatCurrency },
 ]
 
-const TokensTable = (tokens: Token[]) => ({ 
+const TokensTable = (tokens: Token[]) => ({
   render: (columns: Column[]) => {
     const columnNames = columns.map((col: Column) => col.label);
-    const tableData = tokens.map((token: any): any => columns.map((col: Column) => col.formatter.format(token[col.key])))
+
+    const tableData = tokens.map((token: any): any => {
+      return columns.map((col: Column) => col.formatter.format(token[col.key], token));
+    });
 
     return markdownTable([columnNames, ...tableData]);
   }

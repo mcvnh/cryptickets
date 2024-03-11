@@ -1,4 +1,5 @@
 import { Formatter } from "./types/formatter";
+import { Token } from "./types/token";
 
 const toHumanReadable = (input: any) => {
   const number = parseFloat(input);
@@ -21,3 +22,10 @@ export const formatCurrency: Formatter = { format: (input: any) =>  toHumanReada
 export const formatPercent: Formatter = { format:  (input: any) => `${parseFloat(input) <= 0 ? '😢' : '😆'} ${parseFloat(input).toLocaleString("en-US")}%`}
 export const formatPercentWoEmoji: Formatter = { format:  (input: any) => `${parseFloat(input).toLocaleString("en-US")}%`}
 export const formatBoolean: Formatter = { format:  (input: any) => !!input ? 'Yes' : 'No' }
+export const formatSupply: Formatter = {
+  format: (_: any, token: Token) => {
+    const currentSupply = token.circulatingSupply;
+    const maxSupply = token.maxSupply;
+    return `${toHumanReadable(currentSupply)}/${token.infiniteSupply ? '∞' : toHumanReadable(maxSupply)}`;
+  }
+};
