@@ -12,6 +12,7 @@ import { Env } from '../../types/env';
 import qs from 'qs';
 import CMC from '../../services/cmc';
 import SLACK from '../../services/slack';
+import KV from '../../services/kv';
 
 interface Column {
   key: string;
@@ -50,7 +51,11 @@ export default async (request: Request, env: Env) => {
 
   try {
     const tokens = await CMC.fetchSymbols(env, symbols);
-    await SLACK.sendMessage(env, channel, '```\n' + TokensTable(tokens).render(exportColumns) + '```\n');
+    const ignores = (await KV.get(env, channel)).map(it => it.slug);
+
+    const filteredTokens = tokens.filter((token: Token) => !ignores.includes(token.slug))
+
+    await SLACK.sendMessage(env, channel, '```\n' + TokensTable(filteredTokens).render(exportColumns) + '```\n');
   } catch (error: any) {
     return new Response(error.message);
   }

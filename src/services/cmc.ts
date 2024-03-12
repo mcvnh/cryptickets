@@ -3,6 +3,7 @@ import { Env } from './../types/env';
 
 const pullTokenData = (data: any): Token => {
   return {
+    slug: data.slug,
     name: data.name,
     symbol: data.symbol,
     rank: data.cmc_rank,

@@ -1,4 +1,5 @@
 export interface Token {
+  slug: string;
   name: string;
   symbol: string;
   rank: number;
