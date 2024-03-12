@@ -9,10 +9,10 @@ import {
 } from '../../formatter';
 import { markdownTable } from 'markdown-table';
 import { Env } from '../../types/env';
-import qs from 'qs';
 import CMC from '../../services/cmc';
 import SLACK from '../../services/slack';
 import KV from '../../services/kv';
+import { getSlackMessage } from '../../types/slack_request';
 
 interface Column {
   key: string;
@@ -45,10 +45,9 @@ const TokensTable = (tokens: Token[]) => ({
 });
 
 export default async (request: Request, env: Env) => {
-  const body = await request.text();
-  const params = qs.parse(body);
-  const channel = (params['channel_id'] as string).trim();
-  const symbols = (params['text'] as string).trim().replaceAll(" ", ",");
+  const receivedMessage = await getSlackMessage(request);
+  const channel = receivedMessage.channelId;
+  const symbols = receivedMessage.text.replaceAll(" ", ",");
 
   try {
     const tokens = await CMC.fetchSymbols(env, symbols);

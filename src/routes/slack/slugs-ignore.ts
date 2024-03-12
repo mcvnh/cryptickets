@@ -1,13 +1,12 @@
 import { Env } from "../../types/env";
-import qs from 'qs';
 import KV from '../../services/kv';
 import SLACK from '../../services/slack';
+import { getSlackMessage } from "../../types/slack_request";
 
 export const SlugsIgnoreAdd = async (request: Request, env: Env) => {
-  const body = await request.text();
-  const params = qs.parse(body);
-  const channel = (params['channel_id'] as string).trim();
-  const slugs = (params['text'] as string).trim().replaceAll(" ", ",").split(',');
+  const receivedMessage = await getSlackMessage(request);
+  const channel = receivedMessage.channelId;
+  const slugs = receivedMessage.text.replaceAll(" ", ",").split(',');
 
   try {
     for await (let slug of slugs) {
@@ -22,9 +21,8 @@ export const SlugsIgnoreAdd = async (request: Request, env: Env) => {
 }
 
 export const SlugsIgnoreList = async (request: Request, env: Env) => {
-  const body = await request.text();
-  const params = qs.parse(body);
-  const channel = (params['channel_id'] as string).trim();
+  const receivedMessage = await getSlackMessage(request);
+  const channel = receivedMessage.channelId;
 
   try {
     const ignores = await KV.get(env, channel);
@@ -36,10 +34,9 @@ export const SlugsIgnoreList = async (request: Request, env: Env) => {
 }
 
 export const SlugsIgnoreRemove = async (request: Request, env: Env) => {
-  const body = await request.text();
-  const params = qs.parse(body);
-  const channel = (params['channel_id'] as string).trim();
-  const slugs = (params['text'] as string).trim().replaceAll(" ", ",").split(',');
+  const receivedMessage = await getSlackMessage(request);
+  const channel = receivedMessage.channelId;
+  const slugs = receivedMessage.text.replaceAll(" ", ",").split(',');
 
   try {
     for await (let slug of slugs) {
