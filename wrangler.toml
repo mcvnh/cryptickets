@@ -1,3 +1,12 @@
 name = "cryptickets"
 main = "src/index.ts"
 compatibility_date = "2024-03-07"
+
+kv_namespaces = [
+  { binding = "CRYPTICKETS", id = "4036e4b77ae9440cb9c0353635436590" }
+]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "cryptickets"
+database_id = "226591a8-2ccd-4d39-bda4-5ea6ce46d913"
