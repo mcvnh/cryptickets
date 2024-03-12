@@ -22,6 +22,7 @@ interface Column {
 
 const exportColumns: Column[] = [
   { key: "rank", label: "Rank", formatter: NumberFormat },
+  { key: "slug", label: "Slug", formatter: StringFormat },
   { key: "symbol", label: "Symbol", formatter: StringFormat },
   { key: "percentChange24h", label: "24h (%)", formatter: PercentFormat(true) },
   { key: "percentVolumeChange24h", label: "Vol 24h (%)", formatter: PercentFormat(false) },
