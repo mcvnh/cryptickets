@@ -15,6 +15,7 @@ export const SlugsIgnoreAdd = async (request: Request, env: Env) => {
     }
 
     await SLACK.sendMessage(env, channel, `Added ${slugs.join(', ')}`);
+    return new Response();
   } catch (error: any) {
     return new Response(error.message);
   }
@@ -28,6 +29,7 @@ export const SlugsIgnoreList = async (request: Request, env: Env) => {
   try {
     const ignores = await KV.get(env, channel);
     await SLACK.sendMessage(env, channel, ignores.map(it => it.slug).join(', '));
+    return new Response();
   } catch (error: any) {
     return new Response(error.message);
   }
@@ -45,6 +47,7 @@ export const SlugsIgnoreRemove = async (request: Request, env: Env) => {
     }
 
     await SLACK.sendMessage(env, channel, `Remove ${slugs.join(', ')}`);
+    return new Response();
   } catch (error: any) {
     return new Response(error.message);
   }
