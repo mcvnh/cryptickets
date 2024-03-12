@@ -1,5 +1,5 @@
 import { Env } from "../../types/env";
-import KV from '../../services/kv';
+import IGNORES from '../../services/ignores';
 import SLACK from '../../services/slack';
 import { getSlackMessage } from "../../types/slack_request";
 
@@ -10,7 +10,7 @@ export const SlugsIgnoreAdd = async (request: Request, env: Env) => {
 
   try {
     for await (let slug of slugs) {
-      await KV.push(env, channel, slug);
+      await IGNORES.push(env, channel, slug);
     }
 
     await SLACK.sendMessage(env, channel, `Added ${slugs.join(', ')}`);
@@ -25,7 +25,7 @@ export const SlugsIgnoreList = async (request: Request, env: Env) => {
   const channel = receivedMessage.channelId;
 
   try {
-    const ignores = await KV.get(env, channel);
+    const ignores = await IGNORES.get(env, channel);
     await SLACK.sendMessage(env, channel, ignores.map(it => it.slug).join(', '));
     return new Response();
   } catch (error: any) {
@@ -40,7 +40,7 @@ export const SlugsIgnoreRemove = async (request: Request, env: Env) => {
 
   try {
     for await (let slug of slugs) {
-      await KV.remove(env, channel, slug);
+      await IGNORES.remove(env, channel, slug);
     }
 
     await SLACK.sendMessage(env, channel, `Removed ${slugs.join(', ')}`);
@@ -48,4 +48,14 @@ export const SlugsIgnoreRemove = async (request: Request, env: Env) => {
   } catch (error: any) {
     return new Response(error.message);
   }
+}
+
+export const TestSlackVerify = async (request: Request, env: Env) => {
+  const verify: boolean | object = await SLACK.verifyMessage(env, request);
+
+  if (verify) {
+    return Response.json(verify);
+  }
+
+  return new Response('timestamp check failed');
 }

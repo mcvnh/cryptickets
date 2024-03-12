@@ -1,4 +1,4 @@
-import { Env } from './../types/env';
+import { Env } from '../types/env';
 
 export default {
   async push(env: Env, key: string, pushingValue: string): Promise<void> {

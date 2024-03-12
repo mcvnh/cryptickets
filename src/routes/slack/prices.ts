@@ -11,7 +11,7 @@ import { markdownTable } from 'markdown-table';
 import { Env } from '../../types/env';
 import CMC from '../../services/cmc';
 import SLACK from '../../services/slack';
-import KV from '../../services/kv';
+import IGNORES from '../../services/ignores';
 import { getSlackMessage } from '../../types/slack_request';
 
 interface Column {
@@ -51,7 +51,7 @@ export default async (request: Request, env: Env) => {
 
   try {
     const tokens = await CMC.fetchSymbols(env, symbols);
-    const ignores = (await KV.get(env, channel)).map(it => it.slug);
+    const ignores = (await IGNORES.get(env, channel)).map(it => it.slug);
 
     const filteredTokens = tokens.filter((token: Token) => !ignores.includes(token.slug))
 
