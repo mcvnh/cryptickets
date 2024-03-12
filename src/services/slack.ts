@@ -28,11 +28,17 @@ export default {
     const body = await request.text();
     const timestamp = parseInt(request.headers.get('X-Slack-Request-Timestamp') ?? "0", 10);
     const slackSignature = request.headers.get('x-slack-signature');
+    const now = Date.now();
 
-    const isMoreThanFiveMinutes = Math.abs(Date.now() - timestamp) > (60 * 5);
+    const isMoreThanFiveMinutes = Math.abs(now - timestamp) > (60 * 5);
 
     if (isMoreThanFiveMinutes) {
-      return false;
+      return {
+        verified: false,
+        slackSignature,
+        verifySignature: null,
+        timestamp,
+      };
     }
 
     const message = `v0:${timestamp}:${body}`;
@@ -41,7 +47,8 @@ export default {
     return {
       verified: slackSignature == verifySignature,
       slackSignature,
-      verifySignature
+      verifySignature,
+      timestamp
     }
   }
 }

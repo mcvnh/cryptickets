@@ -52,10 +52,5 @@ export const SlugsIgnoreRemove = async (request: Request, env: Env) => {
 
 export const TestSlackVerify = async (request: Request, env: Env) => {
   const verify: boolean | object = await SLACK.verifyMessage(env, request);
-
-  if (verify) {
-    return Response.json(verify);
-  }
-
-  return new Response('timestamp check failed');
+  return Response.json(verify);
 }
