@@ -45,7 +45,7 @@ const TokensTable = (tokens: Token[]) => ({
 });
 
 export default async (request: Request, env: Env) => {
-  const receivedMessage = await getSlackMessage(request);
+  const receivedMessage = await getSlackMessage(env, request);
   const channel = receivedMessage.channelId;
   const symbols = receivedMessage.text.replaceAll(" ", ",");
 

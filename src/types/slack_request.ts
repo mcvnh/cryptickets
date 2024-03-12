@@ -1,5 +1,6 @@
+import { Env } from './env';
 import qs from 'qs';
-
+import SLACK from '../services/slack';
 export interface SlackMessage {
   token: string;
   teamId: string;
@@ -17,8 +18,14 @@ export interface SlackMessage {
   apiAppId: string;
 }
 
-export const getSlackMessage = async (request: Request): Promise<SlackMessage> => {
+export const getSlackMessage = async (env: Env, request: Request): Promise<SlackMessage> => {
   const body = await request.text();
+
+  const verified = await SLACK.verifyMessage(env, request, body);
+  if (!verified) {
+    throw new Error('invalid signature');
+  }
+
   const params = qs.parse(body);
 
   return {

@@ -23,12 +23,10 @@ export default {
     return true;
   },
 
-  async verifyMessage(env: Env, request: Request) {
-    const signingSecret = '479722efe9c6e5ef700df820a71986e4';
-    const body = await request.text();
+  async verifyMessage(env: Env, request: Request, body: string) {
     const timestamp = parseInt(request.headers.get('X-Slack-Request-Timestamp') ?? "0", 10);
     const slackSignature = request.headers.get('x-slack-signature');
-    const now = Date.now();
+    const now = Math.round(Date.now() / 1000);
 
     const isMoreThanFiveMinutes = Math.abs(now - timestamp) > (60 * 5);
 
@@ -37,17 +35,19 @@ export default {
         verified: false,
         slackSignature,
         verifySignature: null,
+        now,
         timestamp,
       };
     }
 
     const message = `v0:${timestamp}:${body}`;
-    const verifySignature = `v0=${sha256.hmac(signingSecret, message)}`;
+    const verifySignature = `v0=${sha256.hmac(env.SLACK_SIGNING_SECRET, message)}`;
 
     return {
       verified: slackSignature == verifySignature,
       slackSignature,
       verifySignature,
+      now,
       timestamp
     }
   }

@@ -1,5 +1,6 @@
 export interface Env {
   SLACK_XOXB_TOKEN: string;
+  SLACK_SIGNING_SECRET: string;
   CMC_API_KEY: string;
   // Example binding to KV. Learn more at https://developers.cloudflare.com/workers/runtime-apis/kv/
   CRYPTICKETS: KVNamespace;
