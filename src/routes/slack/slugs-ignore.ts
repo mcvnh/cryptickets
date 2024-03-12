@@ -46,7 +46,7 @@ export const SlugsIgnoreRemove = async (request: Request, env: Env) => {
       await KV.remove(env, channel, slug);
     }
 
-    await SLACK.sendMessage(env, channel, `Remove ${slugs.join(', ')}`);
+    await SLACK.sendMessage(env, channel, `Removed ${slugs.join(', ')}`);
     return new Response();
   } catch (error: any) {
     return new Response(error.message);
