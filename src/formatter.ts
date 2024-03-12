@@ -19,14 +19,19 @@ const toHumanReadable = (input: any) => {
 export const StringFormat: Formatter = { format: (input: any) => input };
 export const NumberFormat: Formatter = { format: (input: any) => parseFloat(input).toLocaleString("en-US") }
 export const CurrencyFormat: Formatter = { format: (input: any) =>  toHumanReadable(input)};
-export const PercentFormat: ((withEmoji: boolean) => Formatter) = (withEmoji = false) => ({
+export const PercentFormat: ((options: {withEmoji: boolean, upIcon?: string, downIcon?: string}) => Formatter) = (options) => ({
   format: (input: any) => {
+
+    const withEmoji = options.withEmoji;
+    const upIcon = options.upIcon || '😆';
+    const downIcon = options.downIcon || '😢';
+
     const value = parseFloat(input);
     const percentString = `${value.toLocaleString("en-US")}%`;
 
     return withEmoji
-      ? (value <= 0 ? '😢' : '😆' + ' ' + percentString)
-      : percentString
+      ? (value <= 0 ? downIcon : upIcon) + ' ' + percentString
+      : percentString;
   }
 });
 

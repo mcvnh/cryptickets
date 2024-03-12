@@ -26,8 +26,9 @@ it("should returns correct currency format", () => {
 });
 
 it("should returns correct percent format", () => {
-  expect(PercentFormat(true).format('12.30', null)).toBe('😆 12.3%');
-  expect(PercentFormat(false).format('12.30', null)).toBe('12.3%');
+  expect(PercentFormat({ withEmoji: true }).format('12.30', null)).toBe('😆 12.3%');
+  expect(PercentFormat({ withEmoji: true, downIcon: '🆘' }).format('-12.30', null)).toBe('🆘 -12.3%');
+  expect(PercentFormat({ withEmoji: false }).format('12.30', null)).toBe('12.3%');
 });
 
 it("should returns correct percent format", () => {
