@@ -19,7 +19,7 @@ it("should returns correct number format", () => {
 });
 
 it("should returns correct currency format", () => {
-  expect(CurrencyFormat.format("12345", null)).toBe("$12,345.00");
+  expect(CurrencyFormat.format("12345", null)).toBe("$12,345.000");
   expect(CurrencyFormat.format("1234567", null)).toBe("1M");
   expect(CurrencyFormat.format("12345678910", null)).toBe("12B");
   expect(CurrencyFormat.format("1234567891011", null)).toBe("1T");
@@ -37,5 +37,5 @@ it("should returns correct percent format", () => {
 });
 
 it("should returns correct supply format", () => {
-  expect(SupplyFormat.format(null, { circulatingSupply: 100, maxSupply: 1000 })).toBe('$100.00/$1,000.00');
+  expect(SupplyFormat.format(null, { circulatingSupply: 100, maxSupply: 1000 })).toBe('$100.000/$1,000.000');
 })
