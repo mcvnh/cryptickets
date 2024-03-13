@@ -1,10 +1,9 @@
 import { Env } from "../../types/env";
 import IGNORES from '../../services/ignores';
 import SLACK from '../../services/slack';
-import { getSlackMessage } from "../../types/slack_request";
 
 export const SlugsIgnoreAdd = async (request: Request, env: Env) => {
-  const receivedMessage = await getSlackMessage(env, request);
+  const receivedMessage = await SLACK.getSlackMessage(env, request);
   const channel = receivedMessage.channelId;
   const slugs = receivedMessage.text.replaceAll(" ", ",").split(',');
 
@@ -21,7 +20,7 @@ export const SlugsIgnoreAdd = async (request: Request, env: Env) => {
 }
 
 export const SlugsIgnoreList = async (request: Request, env: Env) => {
-  const receivedMessage = await getSlackMessage(env, request);
+  const receivedMessage = await SLACK.getSlackMessage(env, request);
   const channel = receivedMessage.channelId;
 
   try {
@@ -34,7 +33,7 @@ export const SlugsIgnoreList = async (request: Request, env: Env) => {
 }
 
 export const SlugsIgnoreRemove = async (request: Request, env: Env) => {
-  const receivedMessage = await getSlackMessage(env, request);
+  const receivedMessage = await SLACK.getSlackMessage(env, request);
   const channel = receivedMessage.channelId;
   const slugs = receivedMessage.text.replaceAll(" ", ",").split(',');
 

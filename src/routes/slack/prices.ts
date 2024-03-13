@@ -12,7 +12,6 @@ import { Env } from '../../types/env';
 import CMC from '../../services/cmc';
 import SLACK from '../../services/slack';
 import IGNORES from '../../services/ignores';
-import { getSlackMessage } from '../../types/slack_request';
 
 interface Column {
   key: string;
@@ -63,7 +62,7 @@ const TokensTable = (tokens: Token[]) => ({
 });
 
 export default async (request: Request, env: Env) => {
-  const receivedMessage = await getSlackMessage(env, request);
+  const receivedMessage = await SLACK.getSlackMessage(env, request);
   const channel = receivedMessage.channelId;
   const symbols = receivedMessage.text.replaceAll(" ", ",");
 
