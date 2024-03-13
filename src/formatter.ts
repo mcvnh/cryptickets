@@ -13,7 +13,7 @@ const toHumanReadable = (input: any) => {
   if (number >= billion) return Math.round(number / billion) + 'B';
   if (number >= million) return Math.round(number / million) + 'M';
 
-  return number.toLocaleString("en-US", {style:"currency", currency:"USD"});
+  return number.toLocaleString("en-US", {style:"currency", currency:"USD", minimumFractionDigits: 3 });
 }
 
 export const StringFormat: Formatter = { format: (input: any) => input };
