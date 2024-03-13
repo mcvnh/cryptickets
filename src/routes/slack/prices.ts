@@ -42,20 +42,23 @@ const TokensTable = (tokens: Token[]) => ({
 
     const table = [columnNames, ...tableData];
 
-    // transform table col->row => row->col
-    const maxRow = table.length;
-    const maxCol = table[0].length;
-    const pivotTable = [];
+    if (tableData.length === 1) {
+      const maxRow = table.length;
+      const maxCol = table[0].length;
+      const pivotTable = [];
 
-    for (let i = 0; i < maxCol; i++) {
-      const newRow = new Array(maxRow);
-      for (let j = 0; j < maxRow; j++) {
-        newRow[j] = table[j][i];
+      for (let i = 0; i < maxCol; i++) {
+        const newRow = new Array(maxRow);
+        for (let j = 0; j < maxRow; j++) {
+          newRow[j] = table[j][i];
+        }
+        pivotTable.push(newRow);
       }
-      pivotTable.push(newRow);
+
+      return markdownTable(pivotTable);
     }
 
-    return markdownTable(pivotTable);
+    return markdownTable(table);
   }
 });
 
