@@ -41,6 +41,10 @@ const TokensTable = (tokens: Token[]) => ({
 
     const table = [columnNames, ...tableData];
 
+    if (tableData.length === 0) {
+      throw new Error('No tokens found!')
+    }
+
     if (tableData.length === 1) {
       const maxRow = table.length;
       const maxCol = table[0].length;

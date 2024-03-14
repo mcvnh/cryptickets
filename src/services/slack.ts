@@ -13,22 +13,23 @@ export default {
     }
 
     const params = qs.parse(body);
+    const stringOrElseBlank = (input: any) => ((input as string) ?? "").trim();
 
     return {
-      token: (params['token'] as string ?? "").trim(),
-      teamId: (params['team_id'] as string ?? "").trim(),
-      teamDomain: (params['team_domain'] as string ?? "").trim(),
-      enterpriseId: (params['enterprise_id'] as string ?? "").trim(),
-      enterpriseName: (params['enterprise_name'] as string ?? "").trim(),
-      channelId: (params['channel_id'] as string ?? "").trim(),
-      channelName: (params['channel_name'] as string ?? "").trim(),
-      userId: (params['user_id'] as string ?? "").trim(),
-      userName: (params['user_name'] as string ?? "").trim(),
-      command: (params['command'] as string ?? "").trim(),
-      text: (params['text'] as string ?? "").trim(),
-      responseUrl: (params['response_url'] as string ?? "").trim(),
-      triggerId: (params['trigger_id'] as string ?? "").trim(),
-      apiAppId: (params['api_app_id'] as string ?? "").trim(),
+      token: stringOrElseBlank(params['token']),
+      teamId: stringOrElseBlank(params['team_id']),
+      teamDomain: stringOrElseBlank(params['team_domain']),
+      enterpriseId: stringOrElseBlank(params['enterprise_id']),
+      enterpriseName: stringOrElseBlank(params['enterprise_name']),
+      channelId: stringOrElseBlank(params['channel_id']),
+      channelName: stringOrElseBlank(params['channel_name']),
+      userId: stringOrElseBlank(params['user_id']),
+      userName: stringOrElseBlank(params['user_name']),
+      command: stringOrElseBlank(params['command']),
+      text: stringOrElseBlank(params['text']),
+      responseUrl: stringOrElseBlank(params['response_url']),
+      triggerId: stringOrElseBlank(params['trigger_id']),
+      apiAppId: stringOrElseBlank(params['api_app_id']),
     }
   },
 
