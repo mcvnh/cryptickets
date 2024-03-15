@@ -46,19 +46,8 @@ const TokensTable = (tokens: Token[]) => ({
     }
 
     if (tableData.length === 1) {
-      const maxRow = table.length;
-      const maxCol = table[0].length;
-      const pivotTable = [];
-
-      for (let i = 0; i < maxCol; i++) {
-        const newRow = new Array(maxRow);
-        for (let j = 0; j < maxRow; j++) {
-          newRow[j] = table[j][i];
-        }
-        pivotTable.push(newRow);
-      }
-
-      return markdownTable(pivotTable);
+      const adjustedTable = table[0].map((_: any, colIndex: number) => table.map(row => row[colIndex]));
+      return markdownTable(adjustedTable);
     }
 
     return markdownTable(table);
@@ -78,7 +67,7 @@ export default async (request: Request, env: Env) => {
 
     await SLACK.sendMessage(env, channel, '```\n' + TokensTable(filteredTokens).render(exportColumns) + '```\n');
   } catch (error: any) {
-    return new Response(error.message);
+    return new Response(`${error.message}`);
   }
 
   return new Response();
