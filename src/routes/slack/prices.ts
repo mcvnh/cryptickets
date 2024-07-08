@@ -61,9 +61,12 @@ export default async (request: Request, env: Env) => {
 
   try {
     const tokens = await CMC.fetchSymbols(env, symbols);
+
+    const highCapTokens = tokens.filter((token: Token) => token.fdv > 1_000_000);
+
     const ignores = (await IGNORES.get(env, channel)).map(it => it.slug);
 
-    const filteredTokens = tokens.filter((token: Token) => !ignores.includes(token.slug))
+    const filteredTokens = highCapTokens.filter((token: Token) => !ignores.includes(token.slug))
 
     await SLACK.sendMessage(env, channel, '```\n' + TokensTable(filteredTokens).render(exportColumns) + '```\n');
   } catch (error: any) {
